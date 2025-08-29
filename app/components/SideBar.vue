@@ -44,7 +44,7 @@ const sideBarItemsBottom = [
 </script>
 <template>
   <div
-    class="h-full bg-white dark:bg-base-gray-900 p-8 flex flex-col items-center"
+    class="h-full bg-white dark:bg-base-gray-900 p-8 flex flex-col items-center rounded-br-4xl"
   >
     <div class="mb-8">
       <img :src="logo" alt="" class="rounded-xl shadow-lg" width="148" >

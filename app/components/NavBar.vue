@@ -22,11 +22,10 @@ const items = ref<DropdownMenuItem[]>([
   },
   { label: "Logout", icon: "material-symbols:logout", to: "/login" },
 ]);
-
 </script>
 <template>
   <div
-    class="bg-white dark:bg-base-gray-900 w-full flex md:justify-end justify-between p-4"
+    class="bg-white dark:bg-base-gray-900 w-full flex md:justify-end justify-between md:p-4 p-5 rounded-br-4xl rounded-bl-4xl md:rounded-bl-none"
   >
     <div class="md:hidden block">
       <UDropdownMenu
@@ -49,7 +48,7 @@ const items = ref<DropdownMenuItem[]>([
       </UDropdownMenu>
     </div>
     <div class="flex items-center gap-4">
-      <ColorModeButton />
+      <ColorModeButton size="xl" />
     </div>
   </div>
 </template>

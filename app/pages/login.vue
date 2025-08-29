@@ -35,7 +35,7 @@ async function onSubmit() {
 
 <template>
   <div
-    class="w-[500px] flex flex-col items-center gap-4 bg-white dark:bg-base-gray-900 px-4 py-6 border-2 border-gray-200 dark:border-base-gray-700 rounded-xl"
+    class="w-[500px] flex flex-col items-center gap-4 bg-white dark:bg-base-gray-900 px-4 py-6 border-2 border-gray-200 dark:border-base-gray-700 rounded-xl mx-2.5"
   >
     <div class="flex justify-center">
       <h1 class="text-4xl font-bold">Sign In</h1>

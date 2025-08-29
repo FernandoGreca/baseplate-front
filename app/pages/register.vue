@@ -53,7 +53,7 @@ async function onSubmit() {
 
 <template>
   <div
-    class="w-[500px] flex flex-col items-center gap-4 bg-white dark:bg-base-gray-900 px-4 py-6 border-2 border-gray-200 dark:border-base-gray-700 rounded-xl"
+    class="w-[500px] flex flex-col items-center gap-4 bg-white dark:bg-base-gray-900 px-4 py-6 border-2 border-gray-200 dark:border-base-gray-700 rounded-xl mx-2.5"
   >
     <div class="flex justify-center">
       <h1 class="text-4xl font-bold">Register</h1>
@@ -62,7 +62,7 @@ async function onSubmit() {
     <!-- Inputs -->
     <UForm :state="userRegister" class="px-6">
       <div class="flex flex-col items-center gap-2 mt-4">
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2">
           <UFormField label="First Name" name="firstName">
             <UInput
               v-model="userRegister.firstName"
@@ -95,7 +95,7 @@ async function onSubmit() {
           />
         </UFormField>
 
-        <div class="flex gap-2">
+        <div class="flex flex-col sm:flex-row gap-2">
           <UFormField label="Password" name="password">
             <UInput
               v-model="userRegister.password"

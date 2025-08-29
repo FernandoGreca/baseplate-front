@@ -1,7 +1,7 @@
 <script lang="ts"></script>
 
 <template>
-  <div class="h-full flex">
+  <div class="h-full flex bg-purple-200 dark:bg-primary">
     <SideBar class="md:flex hidden" />
     <div class="flex flex-col w-full h-full bg-purple-200 dark:bg-primary">
       <NavBar />
