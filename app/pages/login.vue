@@ -1,30 +1,34 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import type { IUserLogin } from "~/interfaces/user/UserLogin";
 
 definePageMeta({
   layout: "login",
 });
 
-const show = ref(false);
-const password = ref("");
-const email = ref("");
-const formError = ref(false);
-
-watch([email, password], () => {
-  formError.value = false;
+const userLogin = ref<IUserLogin>({
+  email: "",
+  password: "",
 });
 
+const show = ref(false);
+const { showNotification } = useNotification();
+const { validateUser } = useValidate();
+
 async function onSubmit() {
-  if (!email.value || !password.value) {
-    formError.value = true;
+  const validation = validateUser(userLogin.value, "login");
+
+  if (validation !== true) {
+    showNotification("Validation Error", "warning", validation);
     return;
   }
+
   try {
-    // Your login logic here
-    console.log("Logging in with:", email.value, password.value);
+    console.log("Logging in with:", JSON.stringify(userLogin.value, null, 2));
+    showNotification("Success", "success", "Login successful!");
     navigateTo("/home");
   } catch (error) {
     console.error("Login failed:", error);
+    showNotification("Error", "error", "Login failed. Please try again.");
   }
 }
 </script>
@@ -38,26 +42,26 @@ async function onSubmit() {
     </div>
 
     <!-- Inputs -->
-    <div class="flex flex-col items-center gap-2 mt-4">
-      <div class="flex flex-col">
-        <label for="email">Email</label>
+    <UForm :state="userLogin" class="w-full px-6">
+      <UFormField label="Email" name="email" class="w-full">
         <UInput
-          v-model="email"
+          v-model="userLogin.email"
           trailing-icon="i-lucide-at-sign"
           placeholder="Enter your email"
           size="xl"
           aria-label="Email"
+          class="w-full"
         />
-      </div>
+      </UFormField>
 
-      <div class="flex flex-col">
-        <label for="password">Password</label>
+      <UFormField label="Password" name="password" class="mt-2 w-full">
         <UInput
-          v-model="password"
+          v-model="userLogin.password"
           placeholder="Password"
           :type="show ? 'text' : 'password'"
           :ui="{ trailing: 'pe-1' }"
           size="xl"
+          class="w-full"
           aria-label="Password"
         >
           <template #trailing>
@@ -73,29 +77,28 @@ async function onSubmit() {
             />
           </template>
         </UInput>
-      </div>
-
-      <p v-if="formError" class="text-red-500 text-sm">
-        Please fill in all fields
-      </p>
+      </UFormField>
 
       <UButton
         label="Sign In"
         class="w-full flex justify-center mt-4 dark:text-white"
         size="xl"
         aria-label="Sign In"
+        type="submit"
         @click="onSubmit"
       />
-      <p class="text-sm text-center">
+
+      <p class="text-sm text-center mt-2">
         Don't have an account?
         <NuxtLink
           to="/register"
-          class="text-primary dark:text-purple-700"
+          class="text-primary dark:text-primary-light"
           aria-label="Register"
-          >Register</NuxtLink
         >
+          Register
+        </NuxtLink>
       </p>
-    </div>
+    </UForm>
   </div>
 </template>
 <style>

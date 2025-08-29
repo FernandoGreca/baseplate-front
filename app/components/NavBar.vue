@@ -23,19 +23,6 @@ const items = ref<DropdownMenuItem[]>([
   { label: "Logout", icon: "material-symbols:logout", to: "/login" },
 ]);
 
-const toast = useToast();
-
-function showToast() {
-  toast.add({
-    title: "Success",
-    description: "Your action was completed successfully.",
-    color: "success",
-  });
-}
-
-function clearAllToasts() {
-  toast.clear();
-}
 </script>
 <template>
   <div
@@ -62,10 +49,6 @@ function clearAllToasts() {
       </UDropdownMenu>
     </div>
     <div class="flex items-center gap-4">
-      <UButton class="text-white" @click="clearAllToasts"
-        >Clear Notifications</UButton
-      >
-      <UButton class="text-white" @click="showToast">Show Notification</UButton>
       <ColorModeButton />
     </div>
   </div>

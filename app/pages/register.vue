@@ -1,41 +1,52 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
+import type { IUserRegister } from "~/interfaces/user/UserRegister";
 
 definePageMeta({
   layout: "login",
 });
 
-const show = ref(false);
-const showConfirm = ref(false);
-const password = ref("");
-const email = ref("");
-const firstName = ref("");
-const lastName = ref("");
-const confirmPassword = ref("");
-const passwordError = ref(false);
-
-watch([password, confirmPassword], () => {
-  passwordError.value = false;
+const userRegister = ref<IUserRegister>({
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
 });
 
+const show = ref(false);
+const showConfirm = ref(false);
+
+const { showNotification } = useNotification();
+const { validateUser } = useValidate();
+
 async function onSubmit() {
-  if (password.value !== confirmPassword.value) {
-    passwordError.value = true;
+  const validation = validateUser(userRegister.value, "register");
+
+  if (validation !== true) {
+    showNotification("Validation Error", "warning", validation);
     return;
   }
+
   try {
-    // Your registration logic here
     console.log(
       "Registering with:",
-      firstName.value,
-      lastName.value,
-      email.value,
-      password.value,
-      confirmPassword.value
+      JSON.stringify(userRegister.value, null, 2)
+    );
+
+    showNotification(
+      "Success",
+      "success",
+      "Registration completed successfully!"
     );
     navigateTo("/login");
   } catch (error) {
     console.error("Registration failed:", error);
+    showNotification(
+      "Error",
+      "error",
+      "Registration failed. Please try again."
+    );
   }
 }
 </script>
@@ -49,106 +60,110 @@ async function onSubmit() {
     </div>
 
     <!-- Inputs -->
-    <div class="flex flex-col items-center gap-2 mt-4">
-      <div class="flex flex-col w-full">
-        <label for="firstName">First Name</label>
-        <UInput
-          v-model="firstName"
-          placeholder="Enter your first name"
-          size="xl"
-          aria-label="First Name"
-        />
-      </div>
-      <div class="flex flex-col w-full">
-        <label for="lastName">Last Name</label>
-        <UInput
-          v-model="lastName"
-          placeholder="Enter your last name"
-          size="xl"
-          aria-label="Last Name"
-        />
-      </div>
-      <div class="flex flex-col">
-        <label for="email">Email</label>
-        <UInput
-          v-model="email"
-          trailing-icon="i-lucide-at-sign"
-          placeholder="Enter your email"
-          size="xl"
-          aria-label="Email"
-        />
-      </div>
-
-      <div class="flex flex-col">
-        <label for="password">Password</label>
-        <UInput
-          v-model="password"
-          placeholder="Password"
-          :type="show ? 'text' : 'password'"
-          :ui="{ trailing: 'pe-1' }"
-          size="xl"
-          aria-label="Password"
-        >
-          <template #trailing>
-            <UButton
-              color="neutral"
-              variant="link"
+    <UForm :state="userRegister" class="px-6">
+      <div class="flex flex-col items-center gap-2 mt-4">
+        <div class="flex gap-2">
+          <UFormField label="First Name" name="firstName">
+            <UInput
+              v-model="userRegister.firstName"
+              trailing-icon="material-symbols:drive-file-rename-outline"
+              placeholder="First name"
               size="xl"
-              :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="show ? 'Hide password' : 'Show password'"
-              :aria-pressed="show"
-              aria-controls="password"
-              @click="show = !show"
+              aria-label="First Name"
             />
-          </template>
-        </UInput>
-        <p v-if="passwordError" class="text-red-500 text-sm">
-          Passwords do not match
+          </UFormField>
+
+          <UFormField label="Last Name" name="lastName">
+            <UInput
+              v-model="userRegister.lastName"
+              trailing-icon="material-symbols:drive-file-rename-outline-outline"
+              placeholder="Last name"
+              size="xl"
+              aria-label="Last Name"
+            />
+          </UFormField>
+        </div>
+
+        <UFormField label="Email" name="email" class="w-full">
+          <UInput
+            v-model="userRegister.email"
+            trailing-icon="i-lucide-at-sign"
+            placeholder="Enter your email"
+            size="xl"
+            aria-label="Email"
+            class="w-full"
+          />
+        </UFormField>
+
+        <div class="flex gap-2">
+          <UFormField label="Password" name="password">
+            <UInput
+              v-model="userRegister.password"
+              placeholder="Password"
+              :type="show ? 'text' : 'password'"
+              :ui="{ trailing: 'pe-1' }"
+              size="xl"
+              aria-label="Password"
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="xl"
+                  :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="show ? 'Hide password' : 'Show password'"
+                  :aria-pressed="show"
+                  aria-controls="password"
+                  @click="show = !show"
+                />
+              </template>
+            </UInput>
+          </UFormField>
+
+          <UFormField label="Confirm Password" name="confirmPassword">
+            <UInput
+              v-model="userRegister.confirmPassword"
+              placeholder="Confirm Password"
+              :type="showConfirm ? 'text' : 'password'"
+              :ui="{ trailing: 'pe-1' }"
+              size="xl"
+              aria-label="Confirm Password"
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="xl"
+                  :icon="showConfirm ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :aria-label="showConfirm ? 'Hide password' : 'Show password'"
+                  :aria-pressed="showConfirm"
+                  aria-controls="confirmPassword"
+                  @click="showConfirm = !showConfirm"
+                />
+              </template>
+            </UInput>
+          </UFormField>
+        </div>
+
+        <UButton
+          label="Register"
+          class="w-full flex justify-center mt-4 dark:text-white"
+          size="xl"
+          aria-label="Register"
+          type="submit"
+          @click="onSubmit"
+        />
+        <p class="text-sm text-center">
+          Already have an account?
+          <NuxtLink
+            to="/login"
+            class="text-primary dark:text-primary-light"
+            aria-label="Login"
+            >Login</NuxtLink
+          >
         </p>
       </div>
-
-      <div class="flex flex-col">
-        <label for="confirmPassword">Confirm Password</label>
-        <UInput
-          v-model="confirmPassword"
-          placeholder="Confirm Password"
-          :type="showConfirm ? 'text' : 'password'"
-          :ui="{ trailing: 'pe-1' }"
-          size="xl"
-          aria-label="Confirm Password"
-        >
-          <template #trailing>
-            <UButton
-              color="neutral"
-              variant="link"
-              size="xl"
-              :icon="showConfirm ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="showConfirm ? 'Hide password' : 'Show password'"
-              :aria-pressed="showConfirm"
-              aria-controls="confirmPassword"
-              @click="showConfirm = !showConfirm"
-            />
-          </template>
-        </UInput>
-      </div>
-
-      <UButton
-        label="Register"
-        class="w-full flex justify-center mt-4 dark:text-white"
-        size="xl"
-        aria-label="Register"
-        @click="onSubmit"
-      />
-      <p class="text-sm text-center">
-        Already have an account?
-        <NuxtLink
-          to="/login"
-          class="text-primary dark:text-purple-700"
-          aria-label="Login"
-          >Login</NuxtLink
-        >
-      </p>
-    </div>
+    </UForm>
   </div>
 </template>
 <style>
