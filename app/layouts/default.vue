@@ -16,7 +16,7 @@
       </div>
 
       <div
-        class="bg-white dark:bg-base-gray-900 mx-[50px] mb-[50px] h-full p-8 rounded-4xl shadow-2xl md:mt-[0px] mt-[50px]"
+        class="bg-white dark:bg-base-gray-900 md:mx-[50px] mx-[25px] md:mb-[50px] mb-[25px] h-full p-8 rounded-4xl shadow-2xl md:mt-[0px] mt-[25px]"
       >
         <slot />
       </div>
